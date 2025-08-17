@@ -31,6 +31,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
+
+<!-- added uro nob140 20250817 -->
 <xsl:stylesheet
 	version="2.0"
 	xmlns:app="http://www.opengis.net/citygml/appearance/2.0"
@@ -51,6 +53,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
+	xmlns:uro="http://www.kantei.go.jp/jp/singi/tiiki/toshisaisei/itoshisaisei/iur/uro/1.4"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"
@@ -91,6 +94,10 @@ SOFTWARE.
 		<xsl:apply-templates select="bldg:address" />
 
 		<xsl:call-template name="bldg:AbstractGenericApplicationPropertyOfAbstractBuilding" />
+
+		<!-- nob140 20250817 ADE hook should be applied in the near future -->
+		<xsl:apply-templates select="uro:buildingDetails" />
+		<xsl:apply-templates select="uro:extendedAttribute" />
 	</xsl:template>
 	
 	<xsl:template name="bldg:AbstractGenericApplicationPropertyOfAbstractBuilding">

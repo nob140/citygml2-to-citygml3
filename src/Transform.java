@@ -135,6 +135,10 @@ public class Transform {
 		ns.add(new String[] { "veg", "http://www.opengis.net/citygml/vegetation/3.0", xsdLocation + "vegetation.xsd" });
 		ns.add(new String[] { "vers", "http://www.opengis.net/citygml/versioning/3.0", xsdLocation + "versioning.xsd" });
 		ns.add(new String[] { "wtr", "http://www.opengis.net/citygml/waterbody/3.0", xsdLocation + "waterBody.xsd" });
+
+		//nob140 20250816
+		ns.add(new String[] { "uro", "https://nob140.github.io/iur-ade-citygml3/uro/3.9.0", "https://nob140.github.io/iur-ade-citygml3/uro/3.9.0/urbanObject.xsd" });
+
 		ns.add(new String[] { "tsml", "http://www.opengis.net/tsml/1.0", "http://schemas.opengis.net/tsml/1.0/timeseriesML.xsd" });
 		ns.add(new String[] { "sos", "http://www.opengis.net/sos/2.0", "http://schemas.opengis.net/sos/2.0/sosGetObservation.xsd" });
 		ns.add(new String[] { "xAL", "urn:oasis:names:tc:ciq:xsdschema:xAL:2.0", "http://schemas.opengis.net/citygml/xAL/xAL.xsd" });
