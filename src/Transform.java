@@ -1,4 +1,3 @@
-
 /*
  * citygml2-to-citygml3
  *
@@ -95,6 +94,9 @@ public class Transform {
 		String changeLod4Geometry = SETTINGS.get(Transform.changeLod4Geometry);
 
 		String outputXMLFile_tmp = "output/Tmp.gml";
+
+		// nob140 20250818 replace XSLTC to Saxon to avoid 64KB problem
+		System.setProperty("javax.xml.transform.TransformerFactory","net.sf.saxon.TransformerFactoryImpl");
 
 		System.out.println("Transforming...");
 		long startTime = System.nanoTime();

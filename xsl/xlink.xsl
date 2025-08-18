@@ -31,6 +31,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
+
+<!-- nob140 20250818 uro added -->
 <xsl:stylesheet
 	version="2.0"
 	xmlns:app="http://www.opengis.net/citygml/appearance/2.0"
@@ -51,6 +53,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
+    xmlns:uro="http://www.kantei.go.jp/jp/singi/tiiki/toshisaisei/itoshisaisei/iur/uro/1.4"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"

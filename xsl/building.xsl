@@ -95,7 +95,7 @@ SOFTWARE.
 
 		<xsl:call-template name="bldg:AbstractGenericApplicationPropertyOfAbstractBuilding" />
 
-		<!-- nob140 20250817 ADE hook should be applied in the near future -->
+		<!-- nob140 20250817 ADE hook should be applied in future -->
 		<xsl:apply-templates select="uro:buildingDetails" />
 		<xsl:apply-templates select="uro:extendedAttribute" />
 	</xsl:template>
