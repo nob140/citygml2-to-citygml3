@@ -31,6 +31,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
+
+<!-- nob140 20250818 uro added -->
 <xsl:stylesheet
 	version="2.0"
 	xmlns:app="http://www.opengis.net/citygml/appearance/2.0"
@@ -51,6 +53,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
+    xmlns:uro="https://www.geospatial.jp/iur/uro/3.1"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"
@@ -62,83 +65,8 @@ SOFTWARE.
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xalan="http://xml.apache.org/xslt">
     
-    <xsl:template match="gen:stringAttribute">
-		<xsl:element name="genericAttribute">
-			<xsl:element name="gen:StringAttribute">
-				<xsl:element name="gen:name">
-					<xsl:value-of select="@name" />
-				</xsl:element>
-				<xsl:element name="gen:value">
-					<xsl:value-of select="gen:value" />
-				</xsl:element>
-			</xsl:element>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="gen:intAttribute">
-		<xsl:element name="genericAttribute">
-			<xsl:element name="gen:IntAttribute">
-				<xsl:element name="gen:name">
-					<xsl:value-of select="@name" />
-				</xsl:element>
-				<xsl:element name="gen:value">
-					<xsl:value-of select="gen:value" />
-				</xsl:element>
-			</xsl:element>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="gen:doubleAttribute">
-		<xsl:element name="genericAttribute">
-			<xsl:element name="gen:DoubleAttribute">
-				<xsl:element name="gen:name">
-					<xsl:value-of select="@name" />
-				</xsl:element>
-				<xsl:element name="gen:value">
-					<xsl:value-of select="gen:value" />
-				</xsl:element>
-			</xsl:element>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="gen:dateAttribute">
-		<xsl:element name="genericAttribute">
-			<xsl:element name="gen:DateAttribute">
-				<xsl:element name="gen:name">
-					<xsl:value-of select="@name" />
-				</xsl:element>
-				<xsl:element name="gen:value">
-					<xsl:value-of select="gen:value" />
-				</xsl:element>
-			</xsl:element>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="gen:uriAttribute">
-		<xsl:element name="genericAttribute">
-			<xsl:element name="gen:UriAttribute">
-				<xsl:element name="gen:name">
-					<xsl:value-of select="@name" />
-				</xsl:element>
-				<xsl:element name="gen:value">
-					<xsl:value-of select="gen:value" />
-				</xsl:element>
-			</xsl:element>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="gen:measureAttribute">
-		<xsl:element name="genericAttribute">
-			<xsl:element name="gen:MeasureAttribute">
-				<xsl:element name="gen:name">
-					<xsl:value-of select="@name" />
-				</xsl:element>
-				<xsl:element name="gen:value">
-					<xsl:copy-of select="gen:value/@*" />
-					<xsl:value-of select="gen:value" />
-				</xsl:element>
-			</xsl:element>
-		</xsl:element>
+    <xsl:template name="simpleAttrs">
+		<xsl:copy-of select="@xlink:type | @xlink:href | @xlink:role | @xlink:arcrole | @xlink:title | @xlink:show | @xlink:actuate" />
 	</xsl:template>
     
 </xsl:stylesheet>

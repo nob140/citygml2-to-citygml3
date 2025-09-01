@@ -51,6 +51,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
+	xmlns:uro="http://www.kantei.go.jp/jp/singi/tiiki/toshisaisei/itoshisaisei/iur/uro/1.4"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"
@@ -62,10 +63,9 @@ SOFTWARE.
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xalan="http://xml.apache.org/xslt">
     
-   <xsl:template match="dyn:dynamizer">
-		<xsl:copy>
-			<xsl:apply-templates select="@*|node()" />
-		</xsl:copy>
-	</xsl:template>
-    
+    <!-- ++++++++++++++++++++++++++++++++++++++++ -->
+	<!-- ++++++++++++++ NEW IN 3.0 ++++++++++++++ -->
+	<!-- ++++++++++++++++++++++++++++++++++++++++ -->
+	<xsl:template match="pcl:pointCloud" />
+	
 </xsl:stylesheet>

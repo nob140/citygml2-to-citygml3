@@ -51,6 +51,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
+    xmlns:uro="https://www.geospatial.jp/iur/uro/3.1"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"
@@ -62,9 +63,89 @@ SOFTWARE.
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xalan="http://xml.apache.org/xslt">
     
-    <!-- ++++++++++++++++++++++++++++++++++++++++ -->
-	<!-- ++++++++++++++ NEW IN 3.0 ++++++++++++++ -->
-	<!-- ++++++++++++++++++++++++++++++++++++++++ -->
-	<xsl:template match="pcl:pointCloud" />
-	
+    <xsl:template match="gen:stringAttribute">
+		<!-- nob140 20250829 add core: -->
+		<xsl:element name="core:genericAttribute">
+			<xsl:element name="gen:StringAttribute">
+				<xsl:element name="gen:name">
+					<xsl:value-of select="@name" />
+				</xsl:element>
+				<xsl:element name="gen:value">
+					<xsl:value-of select="gen:value" />
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="gen:intAttribute">
+		<!-- nob140 20250829 add core: -->
+		<xsl:element name="core:genericAttribute">
+			<xsl:element name="gen:IntAttribute">
+				<xsl:element name="gen:name">
+					<xsl:value-of select="@name" />
+				</xsl:element>
+				<xsl:element name="gen:value">
+					<xsl:value-of select="gen:value" />
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="gen:doubleAttribute">
+		<!-- nob140 20250829 add core: -->
+		<xsl:element name="core:genericAttribute">
+			<xsl:element name="gen:DoubleAttribute">
+				<xsl:element name="gen:name">
+					<xsl:value-of select="@name" />
+				</xsl:element>
+				<xsl:element name="gen:value">
+					<xsl:value-of select="gen:value" />
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="gen:dateAttribute">
+		<!-- nob140 20250829 add core: -->
+		<xsl:element name="core:genericAttribute">
+			<xsl:element name="gen:DateAttribute">
+				<xsl:element name="gen:name">
+					<xsl:value-of select="@name" />
+				</xsl:element>
+				<xsl:element name="gen:value">
+					<xsl:value-of select="gen:value" />
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="gen:uriAttribute">
+		<!-- nob140 20250829 add core: -->
+		<xsl:element name="core:genericAttribute">
+			<xsl:element name="gen:UriAttribute">
+				<xsl:element name="gen:name">
+					<xsl:value-of select="@name" />
+				</xsl:element>
+				<xsl:element name="gen:value">
+					<xsl:value-of select="gen:value" />
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="gen:measureAttribute">
+		<!-- nob140 20250829 add core: -->
+		<xsl:element name="core:genericAttribute">
+			<xsl:element name="gen:MeasureAttribute">
+				<xsl:element name="gen:name">
+					<xsl:value-of select="@name" />
+				</xsl:element>
+				<xsl:element name="gen:value">
+					<xsl:copy-of select="gen:value/@*" />
+					<xsl:value-of select="gen:value" />
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+    
 </xsl:stylesheet>

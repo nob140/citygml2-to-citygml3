@@ -53,7 +53,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
-	xmlns:uro="http://www.kantei.go.jp/jp/singi/tiiki/toshisaisei/itoshisaisei/iur/uro/1.4"
+    xmlns:uro="https://www.geospatial.jp/iur/uro/3.1"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"
@@ -63,7 +63,11 @@ SOFTWARE.
 	xmlns:ade="http://www.3dcitydb.org/citygml-ade/3.0/citygml/1.0"
 	xmlns="http://www.opengis.net/citygml/2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xslt">
+	xmlns:xalan="http://xml.apache.org/xslt"
+	xmlns:pbase="http://www.opengis.net/citygml/profiles/base/2.0"
+	xmlns:smil20lang="http://www.w3.org/2001/SMIL20/Language"
+	xmlns:smil20="http://www.w3.org/2001/SMIL20/"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
 
 	<xsl:template match="*[local-name()='CityModel']">
 		<CityModel
@@ -148,6 +152,7 @@ SOFTWARE.
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- nob140 20250823 typo gen:dateAttribut -->
 	<xsl:template name="core:AbstractCityObjectType">
 		<xsl:call-template name="core:AbstractFeatureWithLifespanType" />
 		<xsl:apply-templates select="*[local-name()='externalReference']" />
@@ -156,7 +161,7 @@ SOFTWARE.
 		<xsl:apply-templates select="*[local-name()='relativeToWater']" />
 		<xsl:apply-templates select="*[local-name()='relatedTo']" /> <!-- NEW -->
 		<xsl:apply-templates select="app:appearance" />
-		<xsl:apply-templates select="gen:stringAttribute | gen:intAttribute | gen:doubleAttribute | gen:dateAttribut | gen:uriAttribute | gen:measureAttribute" />
+		<xsl:apply-templates select="gen:stringAttribute | gen:intAttribute | gen:doubleAttribute | gen:dateAttribute | gen:uriAttribute | gen:measureAttribute" />
 		<xsl:apply-templates select="dyn:dynamizer" /> <!-- NEW -->
 		<xsl:call-template name="core:AbstractGenericApplicationPropertyOfAbstractCityObject" />
 	</xsl:template>
@@ -204,6 +209,7 @@ SOFTWARE.
 		<xsl:apply-templates select="gml:occupancyDaytime" />
 		<xsl:apply-templates select="gml:occupancyNighttime" />
 		<xsl:apply-templates select="gml:spaceType" />
+		<xsl:apply-templates select="bldg:boundedBy" /> <!-- nob140 20250830 change order -->
 		<xsl:apply-templates select="lod0Point" /> <!-- NEW -->
 		<xsl:apply-templates select="bldg:lod0MultiSurface" />
 		<xsl:apply-templates select="bldg:lod1Solid" />
@@ -211,7 +217,6 @@ SOFTWARE.
 		<xsl:apply-templates select="bldg:lod2Solid" />
 		<xsl:apply-templates select="bldg:lod2MultiSurface | bldg:lod2Geometry | frn:lod2Geometry" />
 		<xsl:apply-templates select="bldg:lod2MultiCurve" />
-		<xsl:apply-templates select="bldg:boundedBy" />
 		<xsl:apply-templates select="bldg:lod3Solid | bldg:lod4Solid" />
 		<xsl:apply-templates select="bldg:lod3MultiSurface | bldg:lod4MultiSurface | bldg:lod3Geometry | bldg:lod4Geometry | frn:lod3Geometry | frn:lod4Geometry" />
 		<xsl:apply-templates select="bldg:lod3MultiCurve | bldg:lod4MultiCurve" />
@@ -342,7 +347,57 @@ SOFTWARE.
 
 	<xsl:template name="core:AbstractGenericApplicationPropertyOfImplicitGeometry">
 	</xsl:template>
-						
+
+	<!-- nob140 20250825 -->
+	<xsl:template match="core:Address">
+		<xsl:element name="core:Address">
+			<xsl:apply-templates select="core:xalAddress" />
+		</xsl:element>
+	</xsl:template>
+	<xsl:template match="core:xalAddress">
+		<xsl:element name="core:xalAddress">
+			<xsl:apply-templates select="xAL:AddressDetails" />
+		</xsl:element>
+	</xsl:template>
+
+	<!-- nob140 20250829 -->
+	<!-- AddressDetails to Address -->
+	<xsl:template match="xAL:AddressDetails">
+		<xAL:Address>
+			
+			<!-- Country -->
+			<xAL:Country>
+				<xAL:NameElement xAL:NameType="Name">
+					<xsl:value-of select="xAL:Country/xAL:CountryName"/>
+				</xAL:NameElement>
+			</xAL:Country>
+
+			<!-- Prefecture = AdministrativeArea -->
+			<xAL:AdministrativeArea xAL:Type="State">
+				<xAL:NameElement xAL:NameType="Name">
+					<xsl:value-of select="xAL:Country/xAL:Locality/xAL:LocalityName[@Type='prefecture']"/>
+				</xAL:NameElement>
+			</xAL:AdministrativeArea>
+
+			<!-- City = Locality -->
+			<xAL:Locality xAL:Type="Municipality">
+				<xAL:NameElement xAL:NameType="Name">
+					<xsl:value-of select="xAL:Country/xAL:Locality/xAL:LocalityName[@Type='city']"/>
+				</xAL:NameElement>
+
+				<!-- Optional: DependentLocality → SubLocality -->
+				<xsl:for-each select="xAL:Country/xAL:Locality/xAL:DependentLocality">
+					<xAL:SubLocality xAL:Type="Village">
+						<xAL:NameElement xAL:NameType="Name">
+							<xsl:value-of select="xAL:DependentLocalityName"/>
+						</xAL:NameElement>
+					</xAL:SubLocality>
+				</xsl:for-each>
+			</xAL:Locality>
+
+		</xAL:Address>
+	</xsl:template>
+	
 	<!-- ++++++++++++++++++++++++++++++++++++++++ -->
 	<!-- ++++++++++++++ NEW IN 3.0 ++++++++++++++ -->
 	<!-- ++++++++++++++++++++++++++++++++++++++++ -->

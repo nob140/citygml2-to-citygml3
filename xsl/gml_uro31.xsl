@@ -32,7 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -->
 
-<!-- added uro nob140 20250816 -->
+<!-- nob140 20250817 uro added -->
 <xsl:stylesheet
 	version="2.0"
 	xmlns:app="http://www.opengis.net/citygml/appearance/2.0"
@@ -53,7 +53,7 @@ SOFTWARE.
 	xmlns:veg="http://www.opengis.net/citygml/vegetation/2.0"
 	xmlns:vers="http://www.opengis.net/citygml/versioning/3.0"
 	xmlns:wtr="http://www.opengis.net/citygml/waterbody/2.0"
-	xmlns:uro="http://www.kantei.go.jp/jp/singi/tiiki/toshisaisei/itoshisaisei/iur/uro/1.4"
+    xmlns:uro="https://www.geospatial.jp/iur/uro/3.1"
 	xmlns:tsml="http://www.opengis.net/tsml/1.0"
 	xmlns:sos="http://www.opengis.net/sos/2.0"
 	xmlns:xAL="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"
@@ -63,44 +63,80 @@ SOFTWARE.
 	xmlns:ade="http://www.3dcitydb.org/citygml-ade/3.0/citygml/1.0"
 	xmlns="http://www.opengis.net/citygml/2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xslt">
+	xmlns:xalan="http://xml.apache.org/xslt"
+	xmlns:pbase="http://www.opengis.net/citygml/profiles/base/2.0"
+	xmlns:smil20lang="http://www.w3.org/2001/SMIL20/Language"
+	xmlns:smil20="http://www.w3.org/2001/SMIL20/"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
     
-    <!-- 
-    exclude-result-prefixes="xalan xlink xsi xAl bldg gml gen con" -->
-
-	<!-- nob140 20250816 -->
-	<xsl:include href="urbanObject.xsl" />
+    <xsl:template name="gml:StandardObjectProperties">
+		<xsl:apply-templates select="gml:metaDataProperty" />
+		<xsl:apply-templates select="gml:description" />
+		<xsl:apply-templates select="gml:descriptionReference" />
+		<xsl:apply-templates select="gml:identifier" />
+		<xsl:apply-templates select="gml:name" />
+	</xsl:template>
 	
-	<xsl:include href="appearance.xsl" />
-	<xsl:include href="building.xsl" />
-	<xsl:include href="cityfurniture.xsl" />
-	<xsl:include href="construction.xsl" />
-	<xsl:include href="core.xsl" />
-	<xsl:include href="dynamizer.xsl" />
-	<xsl:include href="generics.xsl" />
-	<xsl:include href="gml.xsl" />
-	<xsl:include href="pointcloud.xsl" />
-	<xsl:include href="xlink.xsl" />
-	
-    <!-- Post processing texts -->
-	<xsl:strip-space elements="*" />
-	<xsl:output
-		method="xml"
-		indent="yes"
-		xalan:indent-amount="4"
-		standalone="yes" />
-    
-    <!-- Identity transformation -->
-	<xsl:template match="@*|node()">
+	<xsl:template match="gml:metaDataProperty | gml:description | gml:descriptionReference | gml:identifier | gml:name">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:copy>
 	</xsl:template>
 	
-	<!-- Replace LOD4 with LOD3, this is given from Transform.java -->
-	<xsl:param name="lod4ToLod3" />
-	
-	<!-- How to handle lod4Geometry, this is given from Transform.java -->
-	<xsl:param name="changeLod4Geometry" />
+	<xsl:template name="gml:AbstractGMLType">
+		<!-- These elements have custom IDs in their templates, exclude them here to avoid overriding custom IDs -->
+		<xsl:if test="name()!=gml:Solid and name()!=gml:MultiSurface">
+			<xsl:copy-of select="./@gml:id" />
+		</xsl:if>
+		
+		<xsl:call-template name="gml:StandardObjectProperties" />
+	</xsl:template>
 
+	<xsl:template name="gml:AbstractFeatureType">
+		<xsl:call-template name="gml:AbstractGMLType" />
+		<xsl:apply-templates select="gml:boundedBy" />
+		<xsl:apply-templates select="gml:location" />
+	</xsl:template>
+
+	<xsl:template match="gml:boundedBy | gml:location">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template name="gml:AssociationAttributeGroup">
+		<xsl:call-template name="simpleAttrs" />
+		<xsl:copy-of select="@gml:nilReason" />
+		<xsl:copy-of select="@gml:remoteSchema" />
+	</xsl:template>
+
+	<xsl:template name="gml:OwnershipAttributeGroup">
+		<xsl:param name="currentNode" select="." />
+		<xsl:copy-of select="@gml:owns" />
+	</xsl:template>
+	
+	<!-- Generate uniquely identified IDs for gml:MultiSurface -->
+	<xsl:template match="gml:MultiSurface">
+		<xsl:element name="gml:MultiSurface">
+			<xsl:attribute name="gml:id">
+                <xsl:value-of select="concat(../../@gml:id, '_msl_', generate-id())" />
+            </xsl:attribute>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:element>
+	</xsl:template>
+    
+    <!-- Generate uniquely identified IDs for gml:Solid -->
+	<xsl:template match="gml:Solid">
+		<xsl:element name="gml:Solid">
+			<xsl:attribute name="gml:id">
+                <xsl:value-of select="concat(../../@gml:id, '_sl_', generate-id())" />
+            </xsl:attribute>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:element>
+	</xsl:template>
+	
+	<xsl:template name="gml:AbstractFeatureMemberType">
+		<xsl:apply-templates select="gml:OwnershipAttributeGroup" />
+	</xsl:template>
+    
 </xsl:stylesheet>

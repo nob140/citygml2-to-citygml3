@@ -33,6 +33,7 @@ SOFTWARE.
 -->
 
 <!-- added uro nob140 20250817 -->
+<!-- nob140 20250824 for Munakata City -->
 <xsl:stylesheet
 	version="2.0"
 	xmlns:app="http://www.opengis.net/citygml/appearance/2.0"
@@ -63,8 +64,12 @@ SOFTWARE.
 	xmlns:ade="http://www.3dcitydb.org/citygml-ade/3.0/citygml/1.0"
 	xmlns="http://www.opengis.net/citygml/2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:xalan="http://xml.apache.org/xslt">
-	
+	xmlns:xalan="http://xml.apache.org/xslt"
+	xmlns:pbase="http://www.opengis.net/citygml/profiles/base/2.0"
+	xmlns:smil20lang="http://www.w3.org/2001/SMIL20/Language"
+	xmlns:smil20="http://www.w3.org/2001/SMIL20/"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+
 	<xsl:template name="bldg:AbstractBuildingType">
 		<xsl:call-template name="con:AbstractConstructionType" />
 
@@ -346,7 +351,8 @@ SOFTWARE.
 	</xsl:template>
 
 	<xsl:template match="bldg:boundedBy">
-		<xsl:element name="boundary">
+		<!-- nob140 20250829 add core:-->
+		<xsl:element name="core:boundary">
 			<xsl:apply-templates select="@*|node()" />
 		</xsl:element>
 	</xsl:template>
